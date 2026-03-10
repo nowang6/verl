@@ -100,7 +100,6 @@ networkx==3.6.1
 ninja==1.13.0
 nodeenv==1.10.0
 numba==0.61.2
-numpy==1.26.4
 nvidia-cublas-cu12==12.8.4.1
 nvidia-cuda-cupti-cu12==12.8.90
 nvidia-cuda-nvrtc-cu12==12.8.93
@@ -123,8 +122,6 @@ openai-harmony==0.0.4
 opencv-python-headless==4.13.0.92
 optree==0.19.0
 orjson==3.11.7
-outlines==0.1.11
-outlines-core==0.1.26
 packaging==25.0
 pandas==3.0.1
 parso==0.8.6
@@ -227,7 +224,6 @@ wcwidth==0.6.0
 websockets==16.0
 werkzeug==3.1.6
 xformers==0.0.32.post1
-xgrammar==0.1.24
 xxhash==3.6.0
 yarl==1.23.0
 zipp==3.23.0
