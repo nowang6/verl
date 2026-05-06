@@ -1,0 +1,573 @@
+tools:
+  - class_name: "tools.list_application"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "list_application"
+        description: "列出此手机上安装的应用程序。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.open_application"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "open_application"
+        description: "打开手机上安装的应用程序。"
+        parameters:
+          type: "object"
+          properties:
+            application_name:
+              type: "string"
+              description: "要打开的应用程序名称。"
+          required:
+            - "application_name"
+
+  - class_name: "tools.set_brightness"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "set_brightness"
+        description: "设置当前屏幕亮度到指定级别。"
+        parameters:
+          type: "object"
+          properties:
+            level:
+              type: "string"
+              description: "亮度级别，范围为0到100。"
+          required:
+            - "level"
+
+  - class_name: "tools.decrease_brightness"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "decrease_brightness"
+        description: "降低当前屏幕亮度。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.increase_brightness"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "increase_brightness"
+        description: "提高当前屏幕亮度。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.get_current_brightness"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "get_current_brightness"
+        description: "获取当前屏幕亮度级别。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.battery_status"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "battery_status"
+        description: "提供设备电池的相关信息。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.bluetooth_status"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "bluetooth_status"
+        description: "获取蓝牙状态信息。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.open_bluetooth_settings"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "open_bluetooth_settings"
+        description: "打开系统蓝牙设置页面。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.toggle_bluetooth"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "toggle_bluetooth"
+        description: "开启或关闭蓝牙功能。"
+        parameters:
+          type: "object"
+          properties:
+            enable:
+              type: "boolean"
+              description: "设为true则开启蓝牙，设为false则关闭蓝牙。"
+          required:
+            - "enable"
+
+  - class_name: "tools.phone_call"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "phone_call"
+        description: "使用号码拨打电话或打开电话拨号界面。"
+        parameters:
+          type: "object"
+          properties:
+            number:
+              type: "string"
+              description: "要拨打的电话号码。"
+            dial_call:
+              type: "boolean"
+              description: "设为true则通过电话拨号，设为false则直接拨打号码。"
+          required:
+            - "number"
+            - "dial_call"
+
+  - class_name: "tools.phone_sms"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "phone_sms"
+        description: "发送短信。"
+        parameters:
+          type: "object"
+          properties:
+            sms_recipient:
+              type: "string"
+              description: "收件人的电话号码。"
+            sms_message:
+              type: "string"
+              description: "短信内容。"
+          required:
+            - "sms_recipient"
+
+  - class_name: "tools.play_music"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "play_music"
+        description: "播放音乐或歌曲。"
+        parameters:
+          type: "object"
+          properties:
+            song_name:
+              type: "string"
+              description: "要播放的歌曲名称。"
+            artist:
+              type: "string"
+              description: "演唱者或艺术家名称。"
+          required: []
+
+  - class_name: "tools.pause_music"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "pause_music"
+        description: "暂停当前播放的音乐。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.take_picture"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "take_picture"
+        description: "使用相机拍照。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.take_screenshot"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "take_screenshot"
+        description: "截取当前屏幕内容。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.turn_off_flashlight"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "turn_off_flashlight"
+        description: "关闭手电筒。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.open_wifi_settings"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "open_wifi_settings"
+        description: "打开Wi-Fi设置。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.toggle_wifi"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "toggle_wifi"
+        description: "开启或关闭Wi-Fi功能。"
+        parameters:
+          type: "object"
+          properties:
+            enable:
+              type: "boolean"
+              description: "设为true则开启Wi-Fi，设为false则关闭Wi-Fi。"
+          required:
+            - "enable"
+
+  - class_name: "tools.toggle_mobile_data"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "toggle_mobile_data"
+        description: "开启或关闭移动数据网络。"
+        parameters:
+          type: "object"
+          properties:
+            enable:
+              type: "boolean"
+              description: "设为true则开启移动数据，设为false则关闭移动数据。"
+          required:
+            - "enable"
+
+  - class_name: "tools.create_calendar_event"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "create_calendar_event"
+        description: "创建一个新的日历事件。"
+        parameters:
+          type: "object"
+          properties:
+            title:
+              type: "string"
+              description: "活动的名称。"
+            datetime:
+              type: "string"
+              description: "该活动的日期和时间应按照YYYY-MM-DDTHH:MM:SS的格式来表示。"
+          required:
+            - "title"
+            - "datetime"
+
+  - class_name: "tools.show_map"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "show_map"
+        description: "在地图上显示该位置。"
+        parameters:
+          type: "object"
+          properties:
+            query:
+              type: "string"
+              description: "需要搜索的位置。可以是某个地点的名称、一家企业的名称，或者一个地址。"
+          required:
+            - "query"
+
+  - class_name: "tools.get_location"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "get_location"
+        description: "获取当前设备地理位置。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.send_email"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "send_email"
+        description: "发送一封电子邮件。"
+        parameters:
+          type: "object"
+          properties:
+            subject:
+              type: "string"
+              description: "电子邮件的主题。"
+            body:
+              type: "string"
+              description: "电子邮件的正文部分。"
+            to:
+              type: "string"
+              description: "收件人的电子邮件地址。"
+          required:
+            - "to"
+            - "subject"
+
+  - class_name: "tools.turn_on_flashlight"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "turn_on_flashlight"
+        description: "打开手电筒。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.create_contact"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "create_contact"
+        description: "在手机的联系人列表中创建一个联系人。"
+        parameters:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+              description: "该联系人的电子邮件地址。"
+            phone_number:
+              type: "string"
+              description: "该联系人的电话号码。"
+            last_name:
+              type: "string"
+              description: "联系人的姓氏。"
+            first_name:
+              type: "string"
+              description: "联系人的名字。"
+          required:
+            - "first_name"
+            - "last_name"
+
+  - class_name: "tools.search_contacts"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "search_contacts"
+        description: "搜索联系人。"
+        parameters:
+          type: "object"
+          properties:
+            query:
+              type: "string"
+              description: "用于搜索联系人的关键词，例如姓名或电话号码片段。"
+          required:
+            - "query"
+
+  - class_name: "tools.set_alarm"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "set_alarm"
+        description: "设置一个闹钟。"
+        parameters:
+          type: "object"
+          properties:
+            datetime:
+              type: "string"
+              description: "闹钟响铃的日期与时间，建议采用YYYY-MM-DDTHH:MM:SS格式。"
+            label:
+              type: "string"
+              description: "闹钟的标签或名称。"
+            repeat:
+              type: "string"
+              description: "重复规则，例如一次性、每天、工作日等。"
+          required:
+            - "datetime"
+
+  - class_name: "tools.set_timer"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "set_timer"
+        description: "设置倒计时计时器。"
+        parameters:
+          type: "object"
+          properties:
+            duration:
+              type: "string"
+              description: "倒计时时长，例如10分钟或符合ISO 8601的时长表示。"
+            label:
+              type: "string"
+              description: "计时器的标签或名称。"
+          required:
+            - "duration"
+
+  - class_name: "tools.set_volume"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "set_volume"
+        description: "设置设备音量。"
+        parameters:
+          type: "object"
+          properties:
+            level:
+              type: "string"
+              description: "音量级别，范围为0到100。"
+          required:
+            - "level"
+
+  - class_name: "tools.mute_volume"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "mute_volume"
+        description: "将设备设置为静音。"
+        parameters:
+          type: "object"
+          properties: {}
+          required: []
+
+  - class_name: "tools.open_browser"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "open_browser"
+        description: "打开浏览器访问指定网址。"
+        parameters:
+          type: "object"
+          properties:
+            url:
+              type: "string"
+              description: "要打开的完整网址，需包含协议（例如https://）。"
+          required:
+            - "url"
+
+  - class_name: "tools.search_web"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "search_web"
+        description: "使用搜索引擎进行搜索。"
+        parameters:
+          type: "object"
+          properties:
+            query:
+              type: "string"
+              description: "要在搜索引擎中输入的查询内容。"
+          required:
+            - "query"
+
+  - class_name: "tools.toggle_dnd"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "toggle_dnd"
+        description: "开启或关闭勿扰模式。"
+        parameters:
+          type: "object"
+          properties:
+            enable:
+              type: "boolean"
+              description: "设为true则开启勿扰模式，设为false则关闭勿扰模式。"
+          required:
+            - "enable"
+
+  - class_name: "tools.get_weather"
+    config:
+      type: native
+    tool_schema:
+      type: "function"
+      function:
+        name: "get_weather"
+        description: "获取天气信息。"
+        parameters:
+          type: "object"
+          properties:
+            city:
+              type: "string"
+              description: "要查询天气的城市名称；若省略则使用设备当前位置或默认城市。"
+          required: []

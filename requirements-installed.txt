@@ -1,0 +1,11 @@
+tensordict
+omegaconf
+hydra-core
+codetiming
+datasets
+ray
+torchdata
+peft
+trl
+wandb
+qwen-vl-utils

@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import copy
+import json
 import logging
 import os
 import re
@@ -68,6 +69,32 @@ def collate_fn(data_list: list[dict]) -> dict:
     return {**tensors, **non_tensors}
 
 
+def _parse_tool_call_arguments(messages: list) -> None:
+    """Parse tool_call.function.arguments from JSON string to dict in-place.
+
+    Qwen3.5 and similar chat templates use Jinja2 ``|items`` filter on
+    ``tool_call.arguments``, which requires a mapping type rather than a
+    JSON string.  Parquet datasets often store ``arguments`` as a JSON
+    string, so this helper converts them before ``apply_chat_template``.
+
+    Args:
+        messages: List of message dicts, modified in-place.
+    """
+    for msg in messages:
+        if not isinstance(msg, dict):
+            continue
+        if msg.get("tool_calls"):
+            for tc in msg["tool_calls"]:
+                if not isinstance(tc, dict):
+                    continue
+                fn = tc.get("function", {})
+                if isinstance(fn.get("arguments"), str):
+                    try:
+                        fn["arguments"] = json.loads(fn["arguments"])
+                    except json.JSONDecodeError:
+                        pass  # leave as-is if it's not valid JSON
+
+
 class RLHFDataset(Dataset):
     """
     Load and preprocess RLHF data from Parquet files.
@@ -116,7 +143,7 @@ class RLHFDataset(Dataset):
         self.apply_chat_template_kwargs = config.get("apply_chat_template_kwargs", {})
 
         self.tool_config_path = config.get("tool_config_path", None)
-        self.tool_schemas = None
+        self.tool_schemas = None      
         if self.tool_config_path:
             try:
                 from verl.tools.utils.tool_registry import initialize_tools_from_config
@@ -128,8 +155,7 @@ class RLHFDataset(Dataset):
                 ]
             except Exception as e:
                 logger.warning("Failed to initialize tools from %s: %s", self.tool_config_path, e)
-                self.tool_schemas = None
-
+                self.tool_schemas = None       
         self.num_workers = config.get("filter_overlong_prompts_workers", max(1, os.cpu_count() // 4))
         self.num_workers = min(self.num_workers, os.cpu_count()) if self.num_workers is not None else None
         self.use_shm = config.get("use_shm", False)
@@ -190,13 +216,19 @@ class RLHFDataset(Dataset):
             prompt_key = self.prompt_key
             image_key = self.image_key
             video_key = self.video_key
+            print("#"*100)
+            print(processor)
+            print("#"*100)
 
             if processor is not None:
                 from verl.utils.dataset.vision_utils import process_image, process_video
 
                 def doc2len(doc) -> int:
                     try:
+                 
                         messages = self._build_messages(doc, key=self.prompt_key)
+                        # remove assistant messages so the model only sees system + user context
+                        messages = [m for m in messages if m.get("role") != "assistant"]
                         # pass tool schemas if available so the processor can format prompts
                         apply_kwargs = dict(**self.apply_chat_template_kwargs)
                         if self.tool_schemas is not None:
@@ -205,6 +237,8 @@ class RLHFDataset(Dataset):
                         raw_prompt = self.processor.apply_chat_template(
                             messages, add_generation_prompt=True, tokenize=False, **apply_kwargs
                         )
+                        length = len(raw_prompt)
+                        print(f"length: {length}")
                         if image_key in doc and doc[image_key]:
                             images = [
                                 process_image(image, image_patch_size=self.image_patch_size) for image in doc[image_key]
@@ -255,6 +289,7 @@ class RLHFDataset(Dataset):
                 def doc2len(doc) -> int:
                     try:
                         apply_kwargs = dict(**self.apply_chat_template_kwargs)
+                       
                         if self.tool_schemas is not None:
                             apply_kwargs["tools"] = self.tool_schemas
 
@@ -263,9 +298,14 @@ class RLHFDataset(Dataset):
                         apply_kwargs.pop("return_dict", None)
                         apply_kwargs.pop("return_tensors", None)
 
+                        messages = [m for m in doc[prompt_key] if m.get("role") != "assistant"]
+                        _parse_tool_call_arguments(messages)
+                        
+                       
                         tokenized_prompt = tokenizer.apply_chat_template(
-                            doc[prompt_key], add_generation_prompt=True, tokenize=True, **apply_kwargs
+                            messages, add_generation_prompt=True, tokenize=True, **apply_kwargs
                         )
+                        
                         return len(normalize_token_ids(tokenized_prompt))
                     except Exception:
                         print("Error processing one of the samples, skipping...")
@@ -316,6 +356,7 @@ class RLHFDataset(Dataset):
             messages: List of messages with replaced placeholder.
         """
         messages: list = example[key]
+        _parse_tool_call_arguments(messages)
         # When concatenating image and video datasets, get will return None for image or video sample
         images = example.get(self.image_key, None) or []
         videos = example.get(self.video_key, None) or []
