@@ -966,9 +966,14 @@ class AgentLoopWorker:
 
         # add reward_extra_info to non_tensor_batch
         reward_extra_infos = [input.extra_fields.get("reward_extra_info", {}) for input in inputs]
-        reward_extra_keys = list(reward_extra_infos[0].keys())
-        for key in reward_extra_keys:
-            non_tensor_batch[key] = np.array([info[key] for info in reward_extra_infos])
+        # Collect keys from all infos (not just the first) to handle varying return paths
+        reward_extra_keys_set = set()
+        for info in reward_extra_infos:
+            reward_extra_keys_set.update(info.keys())
+        for key in reward_extra_keys_set:
+            arr = np.empty(len(reward_extra_infos), dtype=object)
+            arr[:] = [info.get(key) for info in reward_extra_infos]
+            non_tensor_batch[key] = arr
 
         # Add multi_modal_inputs to non_tensor_batch if any samples have them
         multi_modal_inputs_list = [input.multi_modal_inputs for input in inputs]
@@ -997,7 +1002,7 @@ class AgentLoopWorker:
         # Only include reward_extra_keys in meta_info if rm_scores is in batch
         # This avoids conflicts when reward_tensor is merged later in ray_trainer.py
         if "rm_scores" in batch.keys():
-            meta_info = {"metrics": metrics, "reward_extra_keys": reward_extra_keys}
+            meta_info = {"metrics": metrics, "reward_extra_keys": sorted(reward_extra_keys_set)}
         else:
             meta_info = {"metrics": metrics}
 
@@ -1211,7 +1216,7 @@ class AgentLoopManager:
         metrics = [output.meta_info.pop("metrics") for output in outputs]  # List[List[Dict[str, str]]]
         timing = self._performance_metrics(metrics, output)
 
-        output.meta_info = {"timing": timing, **outputs[0].meta_info}
+        output.meta_info = {"timing": timing, **output.meta_info}
         return output
 
     def _performance_metrics(self, metrics: list[list[dict[str, str]]], output: DataProto) -> dict[str, float]:

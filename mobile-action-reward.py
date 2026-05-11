@@ -160,14 +160,14 @@ def compute_score(
     predicted = _all_predicted_hermes_tools(solution_str or "")
 
     if not expected:
-        result = {"score": 0.0, "acc": False, "reason": "invalid_ground_truth", "n_expected": 0, "n_matched": 0}
+        result = {"score": 0.0, "acc": False, "reason": "invalid_ground_truth", "n_expected": 0, "n_matched": 0, "expected": [], "predicted": []}
         print(f"[score] {result}")
         print(f"[response] {solution_str[:500]}")
         print(f"[ground_truth] {ground_truth}")
         return result
 
     if not predicted:
-        result = {"score": 0.0, "acc": False, "reason": "no_tool_call_in_completion", "n_expected": len(expected), "n_matched": 0}
+        result = {"score": 0.0, "acc": False, "reason": "no_tool_call_in_completion", "n_expected": len(expected), "n_matched": 0, "expected": [{"name": n, "arguments": a} for n, a in expected], "predicted": []}
         print(f"[score] {result}")
         print(f"[response] {solution_str[:500]}")
         print(f"[ground_truth] {ground_truth}")

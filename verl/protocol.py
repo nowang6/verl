@@ -931,6 +931,11 @@ class DataProto:
 
         non_tensor_batch = list_of_dict_to_dict_of_list(list_of_dict=[d.non_tensor_batch for d in data])
         for key, val in non_tensor_batch.items():
+            # Replace None (missing key in a subset) with a same-sized object array
+            # of Nones so np.concatenate preserves total batch size.
+            for i, v in enumerate(val):
+                if v is None:
+                    val[i] = np.full(len(data[i].batch), None, dtype=object)
             non_tensor_batch[key] = np.concatenate(val, axis=0)
 
         # Merge meta_info with special handling for metrics
@@ -948,8 +953,12 @@ class DataProto:
                                 all_metrics.append(v)
                     else:
                         if k in merged_meta_info:
-                            # Ensure consistency for overlapping non-metric keys
-                            assert merged_meta_info[k] == v, f"Conflicting values for meta_info key '{k}'"
+                            # Merge lists (e.g. reward_extra_keys) by taking the union;
+                            # otherwise ensure consistency.
+                            if isinstance(merged_meta_info[k], list) and isinstance(v, list):
+                                merged_meta_info[k] = sorted(set(merged_meta_info[k]) | set(v))
+                            else:
+                                assert merged_meta_info[k] == v, f"Conflicting values for meta_info key '{k}'"
                         else:
                             merged_meta_info[k] = v
 

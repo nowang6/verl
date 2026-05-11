@@ -7,7 +7,7 @@ num_workers: 8
 custom_reward_function:
   # The path to the file containing your customized reward function.
   # If not specified, pre-implemented reward functions will be used.
-  path: /home/niwang/code/verl/mobile-action-reward.py
+  path: /root/autodl-tmp/verl/mobile-action-reward.py
   # The name of the reward function within the specified file. Default is 'compute_score'.
   name: compute_score
 

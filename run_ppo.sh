@@ -14,8 +14,8 @@
 # GPU 要求: 2 x 24GB+
 # ============================================================
 
-export MODEL_PATH=/data/models/Qwen3-0.6B
-export DATA_PATH=/data/datasets/td-mobile-data
+export MODEL_PATH=/root/autodl-tmp/Qwen3-0.6B
+export DATA_PATH=/root/autodl-tmp/mobile-action-data/data
 
 # 提高 Ray 系统内存 OOM 阈值（默认 0.95），避免 worker 被误杀
 export RAY_memory_usage_threshold=0.98
@@ -41,7 +41,7 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
   actor_rollout_ref.rollout.checkpoint_engine.update_weights_bucket_megabytes=64 \
   actor_rollout_ref.rollout.agent.num_workers=2 \
   actor_rollout_ref.rollout.agent.default_agent_loop=tool_agent \
-  actor_rollout_ref.rollout.multi_turn.tool_config_path=/home/niwang/code/verl/tools/mobile-actions.yaml \
+  actor_rollout_ref.rollout.multi_turn.tool_config_path=/root/autodl-tmp/verl/tools/mobile-actions.yaml \
   actor_rollout_ref.rollout.multi_turn.max_assistant_turns=1 \
   actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=2 \
   critic.optim.lr=1e-5 \
@@ -49,7 +49,7 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
   critic.ppo_micro_batch_size_per_gpu=1 \
   algorithm.kl_ctrl.kl_coef=0.001 \
   trainer.critic_warmup=0 \
-  trainer.logger='["console"]' \
+  trainer.logger='["console","wandb"]' \
   trainer.project_name=llm-rl \
   trainer.experiment_name=td-mobile-ppo \
   trainer.val_before_train=False \
